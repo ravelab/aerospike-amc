@@ -1,10 +1,12 @@
-FROM ubuntu
+FROM busybox
+MAINTAINER Amanpreet Singh<aps.sids@gmail.com>
 
-ENV BUILD_DEPS wget python python-dev gcc
+ENV AMC_VERSION 4.0.13
+RUN wget -O aerospike-amc-community-${AMC_VERSION}-linux.tar.gz https://www.aerospike.com/download/amc/${AMC_VERSION}/artifact/linux && \
+    tar xvzf aerospike-amc-community-${AMC_VERSION}-linux.tar.gz && \
+    rm -rf aerospike-amc-community-${AMC_VERSION}-linux.tar.gz
 
-RUN apt-get update -y && \
-    apt-get install $BUILD_DEPS -y && \
-    wget --content-disposition http://www.aerospike.com/download/amc/3.6.13/artifact/ubuntu12 && \
-    dpkg -i aerospike-amc-community-3.6.13.all.x86_64.deb
+EXPOSE 8081
 
-CMD ["/bin/bash", "-c", "/etc/init.d/amc start && tail -f /var/log/amc/aerospike_amc.log"]
+CMD ["/opt/amc/amc"]
+
